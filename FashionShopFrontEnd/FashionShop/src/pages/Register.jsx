@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { handleError, handleSuccess } from "../utils/tostify";
 
 const Register = () => {
   const [register, setRegister] = useState({
@@ -37,14 +39,26 @@ const Register = () => {
       body: JSON.stringify({ username, password, email }),
     });
      const result = await response.json();
-     console.log("Data recieve from backend : ",result)
+    //  console.log("Data recieve from backend : ",result)
      const { success, error,message,data } = result;
+     console.log("mesage from backend",message)
      if (success) {
-       navigate("/login");
+       handleSuccess(message);
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
      }else if (error) {
+       handleError(message);
        console.error("error: ", error);
      } 
+     else{
+       handleError(message);
+       console.error("error ", message);
+     }
+     setRegister({ username: "", password: "", email: "" });
+
    } catch (error) {
+    handleError(error)
     console.error('submition error: ', error)
    }
   };
@@ -159,6 +173,7 @@ const Register = () => {
           </div>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };
