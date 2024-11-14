@@ -19,7 +19,7 @@ const Products = () => {
     };
 
     fetchData();
-  }, [products]);
+  }, []);
 
   return (
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [loginInfo, setLoginInfo] = useState({
@@ -7,6 +7,7 @@ const Login = () => {
     password: "",
   });
   const [isChecked, setIsChecked] = useState(false);
+  const navigate = useNavigate();
   const handleOnSubmit = async(e) => { 
     e.preventDefault();
     const {email,password}=loginInfo;
@@ -21,8 +22,15 @@ const Login = () => {
       })
       const result=await response.json();
       console.log("Data recieve from backend : ",result)
-      const {success,error,message,data}=result;
+      const {success,error,message,data,token}=result;
       console.log("mesage from backend",message)
+      console.log("token from backend",token)
+
+      if(success){
+         localStorage.setItem("token",token);
+         localStorage.setItem("user",JSON.stringify(data.username));
+        // navigate("/products")
+      }
     } catch (error) {
       console.log(error)
     }

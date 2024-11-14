@@ -1,5 +1,6 @@
 const express=require('express');
 const cors=require('cors');
+const cookieParser=require('cookie-parser');
 const prooductsRouter=require('./routers/productsRouter');
 const userRouter=require('./routers/userRouter');
 const app=express();
@@ -14,6 +15,7 @@ app.use(cors(
 ));
 
 app.use(express.json());
+app.use(cookieParser())
 app.use(express.urlencoded({extended:true}));
 app.use(express.static('public'));
 app.use('/api',prooductsRouter);
