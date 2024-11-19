@@ -59,8 +59,8 @@ const generateAccessAndRefreshToken = async (userId) => {
     try {
        const user = await User.findById(userId);
        console.log(user);
-       const accessToken = user.generateAccessToken();
-       const refreshToken = user.generateRefreshToken();
+       const accessToken = await user.generateAccessToken();
+       const refreshToken =  await user.generateRefreshToken();
        user.refreshToken = refreshToken;
        await user.save({
           validateBeforeSave: false,
@@ -98,10 +98,10 @@ module.exports.loginUser = async (req, res) => {
         const { refreshToken, accessToken } = await generateAccessAndRefreshToken(user._id)
         const option={
             httpOnly:true,
-            secure:true,
-            // sameSite:"strict",
+            // secure:true,
+            sameSite:"strict",
         }
-        console.log("Tokens after generating ",accessToken ,"/n ",refreshToken);
+        console.log("Tokens after generating ",accessToken ,"\n ",refreshToken);
     
         const userWithoutPassword = await User.findById(user._id).select("-password")
         res
@@ -115,7 +115,7 @@ module.exports.loginUser = async (req, res) => {
                 success: true,
                 token: accessToken,
                 }
-            // new ApiResponse(200, {userWithoutPassword, accessToken}, "User logged in successfully")
+            //  new ApiResponse(200, {user:userWithoutPassword, token:refreshToken}, "User logged in successfully")
         )
     } catch (error) {
      console.log("error in login user",error)
@@ -124,4 +124,33 @@ module.exports.loginUser = async (req, res) => {
     }
 
 
+}
+
+
+module.exports.logoutUser = async (req, res) => {
+    try{
+
+        const { refreshToken , accessToken } = req.cookies
+        console.log("refresh token of login user :  ",refreshToken)
+        const user = await User.findOne({refreshToken})
+        if(!user){
+            throw new ApiError(404, "User not found")
+        }
+        console.log(user)
+        user.refreshToken = null
+        await user.save()
+        console.log("user saved after logout : ",user)
+        res
+        .status(200)
+        .clearCookie("refreshToken",refreshToken,{maxAge:0,httpOnly:true})
+        .clearCookie("accessToken",accessToken,{maxAge:0,httpOnly:true})
+
+        .json({message:"User logged out successfully", success:true})
+
+
+
+    }catch(error){
+        console.log("error in logout user",error)
+        throw new ApiError(401, error?.message|| "Invalid access token ")
+    }
 }

@@ -1,3 +1,8 @@
 export {default as Navbar} from "./Navbar"
 export {default as Header} from "./Header"
 export {default as Hero} from "./Hero"
+export {default as FormInput} from "./FormInput"
+export {default as CommonHeading} from "./CommonHeading"
+export {default as ProductsListView} from "./ProductsListView"
+export {default as ProductsGridView} from "./ProductsGridView"
+export {default as ProductsContainer} from "./ProductsContainer"
