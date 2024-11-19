@@ -115,7 +115,6 @@ module.exports.loginUser = async (req, res) => {
                 success: true,
                 token: accessToken,
                 }
-            //  new ApiResponse(200, {user:userWithoutPassword, token:refreshToken}, "User logged in successfully")
         )
     } catch (error) {
      console.log("error in login user",error)
@@ -130,25 +129,23 @@ module.exports.loginUser = async (req, res) => {
 module.exports.logoutUser = async (req, res) => {
     try{
 
-        const { refreshToken , accessToken } = req.cookies
-        console.log("refresh token of login user :  ",refreshToken)
-        const user = await User.findOne({refreshToken})
-        if(!user){
-            throw new ApiError(404, "User not found")
+        const { refreshToken , accessToken } = req?.cookies||""
+        if(!(refreshToken && accessToken)){
+            res.redirect("/login")
+             throw new ApiError(404, "User not found first login ")
         }
-        console.log(user)
-        user.refreshToken = null
-        await user.save()
-        console.log("user saved after logout : ",user)
-        res
+        console.log("refresh token of login user :  ",refreshToken)
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { $set : {refreshToken: "" }},
+            { new: true }
+        )
+       return  res
         .status(200)
         .clearCookie("refreshToken",refreshToken,{maxAge:0,httpOnly:true})
         .clearCookie("accessToken",accessToken,{maxAge:0,httpOnly:true})
 
         .json({message:"User logged out successfully", success:true})
-
-
-
     }catch(error){
         console.log("error in logout user",error)
         throw new ApiError(401, error?.message|| "Invalid access token ")
