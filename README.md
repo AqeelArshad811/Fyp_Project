@@ -1,14 +1,3 @@
-CORS_ORIGIN="http://localhost:5173",
-PORT=8080
-DB_USER=fashionfyp144171
-DB_PASSWORD=DDvHMFjWYBgCjL1N
-DB_NAME=backned_fyp
-MONGODB_URI=mongodb+srv://fashionfyp144171:DDvHMFjWYBgCjL1N@fyp-backned.z13v5.mongodb.net/
-# mongodb+srv://fashionfyp144171:DDvHMFjWYBgCjL1N@fyp-backned.z13v5.mongodb.net/backned_fyp?retryWrites=true&w=majority&appName=fyp-backned
-ACCESS_TOKEN_SECRET=asdghsajfasfh_bjas_hsda_sd
-ACCESS_TOKEN_EXPIRY=1d
-REFRESH_TOKEN_SECRET=asdsd_asda_wqdacz_dq
-REFRESH_TOKEN_EXPIRY=4d
 
 # Fyp_Project
 Here’s an example of a `README.md` file for your project that you can add to your Git repository. This README will cover key aspects like the project overview, setup instructions, and relevant usage information.
