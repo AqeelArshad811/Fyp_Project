@@ -6,6 +6,8 @@ import { FormInput } from "../components";
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
 import {handleSuccess,handleError} from "../utils/tostify"
+import { Outlet } from "react-router-dom";
+import {Header,Navbar} from "../components"
 
 const Login = () => {
   const [loginInfo, setLoginInfo] = useState({
@@ -37,13 +39,15 @@ const Login = () => {
       if (success) {
         console.log("success status : ",success)
         handleSuccess(message);
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(data.username));
-        // navigate("/products")
+       // localStorage.setItem("token", token);
+        //localStorage.setItem("user", JSON.stringify(data.username));
+        setTimeout(() => {
+          navigate("/products")
+        },2000)
       }
       else if (error ){
         handleError(error)
-      }
+      }  
       else{
         handleError(message)
       }
@@ -59,7 +63,11 @@ const Login = () => {
     console.log(loginInfo);
   };
   return (
-    <div className="flex flex-col justify-center items-center h-screen gap-3">
+    <>
+    <Header/>
+    <Navbar/>    
+
+    <div className="flex flex-col m-36 items-center h-screen gap-3">
       <form  onSubmit={handleOnSubmit}>
         <div className="flex flex-col gap-2">
           <h1 className="font-bold text-center text-2xl mb-4">Login</h1>
@@ -100,9 +108,11 @@ const Login = () => {
           />
           <button className="my-2 btn btn-outline">Login</button>
           <div className="flex flex-col text-sm">
-            <p className="my-2 text-sm text-primary link-hover cursor-pointer">
-              Forgot password
-            </p>
+              <Link to={"/forgotPassword"}> 
+                <p className="my-2 text-sm text-primary link-hover cursor-pointer">
+                  Forgot password
+                </p>
+              </Link>
             <div className="flex flex-row gap-2">
               <p>Does't have an account</p>
               <Link to={"/register"}>
@@ -114,7 +124,9 @@ const Login = () => {
           </div>
         </div>
       </form>
+      <Outlet/>
     </div>
+    </>
   );
 };
 

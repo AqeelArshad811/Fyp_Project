@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utils/tostify";
 import { FaUser } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
@@ -9,6 +8,12 @@ import { FormInput } from "../components";
 import { IoEye } from "react-icons/io5";
 import { IoEyeOff } from "react-icons/io5";
 import { IoEyeOutline } from "react-icons/io5";
+import { Navbar,Header } from '../components'
+import { SubmitMe } from "../components"
+import { axiosFetchUsers } from "../utils/axiosFetch";
+
+
+
 const Register = () => {
   const [register, setRegister] = useState({
     username: "",
@@ -17,19 +22,20 @@ const Register = () => {
   });
   const [isChecked, setIsChecked] = useState(false);
   const [isHidden, setIsHidden] = useState(true);
-
   const navigate = useNavigate();
+  
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     const newInfo = { ...register, [name]: value };
     setRegister(newInfo);
     console.log(register);
   };
+  
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     const { username, password, email } = register;
     console.log(
-      "usernme : ",
+      "username : ",
       username,
       "password: ",
       password,
@@ -52,8 +58,8 @@ const Register = () => {
      if (success) {
        handleSuccess(message);
       setTimeout(() => {
-        navigate("/login");
-      }, 1000);
+        navigate("/verify-user");
+      }, 2000);
      }else if (error) {
        handleError(message);
        console.error("error: ", error);
@@ -63,15 +69,20 @@ const Register = () => {
        console.error("error ", message);
      }
      setRegister({ username: "", password: "", email: "" });
-
-   } catch (error) {
-    handleError(error)
-    console.error('submition error: ', error)
+     
+    } catch (error) {
+      handleError(error)
+      console.error('submition error: ', error)
+      setRegister({ username: "", password: "", email: "" });
    }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen gap-3 ">
+    <div>
+      <Header/>
+      <Navbar/>
+    
+    <div className="flex flex-col m-36   items-center h-screen gap-3 ">
       <form onSubmit={handleOnSubmit}
       >
         <div className="flex flex-col gap-2 ">
@@ -125,7 +136,8 @@ const Register = () => {
           
           {/* buttons */}
           <div className="flex flex-col w-full gap-2">
-            <button className="btn btn-outline w-full">Register</button>
+            <SubmitMe text="Register"/>
+            {/* <button className="btn btn-outline w-full">Register</button>  */}
             <Link to={"/login"}>
               <button type="submit" className="btn btn-neutral w-full">
                 Have Account
@@ -134,7 +146,7 @@ const Register = () => {
           </div>
         </div>
       </form>
-      <ToastContainer />
+    </div>
     </div>
   );
 };
